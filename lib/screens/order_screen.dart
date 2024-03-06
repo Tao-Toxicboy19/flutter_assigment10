@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/bloc/order_bloc.dart';
+import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -40,43 +42,80 @@ class _OrderScreenState extends State<OrderScreen> {
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
                     Order items = orders[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Card(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: Text(items.beerName),
-                              subtitle: Text(items.description),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Row(
-                                    children: [
-                                      const Text("ร้าน"),
-                                      const SizedBox(width: 10),
-                                      Text(items.shopName),
-                                    ],
-                                  ),
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 120,
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl + items.image,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, protected) => const Center(
+                                  child: CircularProgressIndicator(),
                                 ),
-                                Row(
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // TextButton(
-                                    //   child: const Text('BUY TICKETS'),
-                                    //   onPressed: () {/* ... */},
-                                    // ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      child: const Text('เพิ่มลงตะกร้า'),
-                                      onPressed: () {/* ... */},
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        items.beerName,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 1.0,
+                                        ),
+                                      ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    Text(
+                                      items.description,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Text(
+                                      "แอลกอฮอล์ ${items.alcohol}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Text(
+                                      "จำนวนสินค้า ${items.stock}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
                                   ],
                                 ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "ราคา ${items.price}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 25),
+                                customButtom(
+                                    labelText: 'เพิ่มลงตะกร้า', onPressd: () {})
                               ],
                             ),
                           ],
