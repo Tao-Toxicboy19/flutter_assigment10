@@ -12,36 +12,48 @@ String orderToJson(List<Order> data) =>
 
 class Order {
   String id;
-  String orderName;
+  String beerName;
   String description;
+  String alcohol;
   int price;
-  String username;
+  int stock;
+  String image;
+  String shopName;
   String userId;
 
   Order({
     required this.id,
-    required this.orderName,
+    required this.beerName,
     required this.description,
+    required this.alcohol,
     required this.price,
-    required this.username,
+    required this.stock,
+    required this.image,
+    required this.shopName,
     required this.userId,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
         id: json["ID"],
-        orderName: json["OrderName"],
+        beerName: json["BeerName"],
         description: json["Description"],
+        alcohol: json["Alcohol"],
         price: json["Price"],
-        username: json["Username"],
+        stock: json["Stock"],
+        image: json["Image"],
+        shopName: json["ShopName"],
         userId: json["UserId"],
       );
 
   Map<String, dynamic> toJson() => {
         "ID": id,
-        "OrderName": orderName,
+        "BeerName": beerName,
         "Description": description,
+        "Alcohol": alcohol,
         "Price": price,
-        "Username": username,
+        "Stock": stock,
+        "Image": image,
+        "ShopName": shopName,
         "UserId": userId,
       };
 }

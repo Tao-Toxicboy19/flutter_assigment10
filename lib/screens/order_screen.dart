@@ -47,7 +47,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
-                              title: Text(items.orderName),
+                              title: Text(items.beerName),
                               subtitle: Text(items.description),
                             ),
                             Row(
@@ -59,7 +59,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     children: [
                                       const Text("ร้าน"),
                                       const SizedBox(width: 10),
-                                      Text(items.username),
+                                      Text(items.shopName),
                                     ],
                                   ),
                                 ),

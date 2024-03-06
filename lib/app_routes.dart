@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter_assigment10v1/screens/dashboard_screen.dart';
+import 'package:flutter_assigment10v1/screens/bottomnav/dashboard_screen.dart';
 import 'package:flutter_assigment10v1/screens/login_screen.dart';
 import 'package:flutter_assigment10v1/screens/register_screen.dart';
 
