@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_element
 
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
@@ -26,66 +26,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<OrderBloc, OrderState>(
-        builder: (context, state) {
-          if (state.orderStatus == OrderStatus.success) {
-            // นำข้อมูล orders มาแสดงที่นี่
-            List<Order> orders = state.result ?? [];
+      appBar: AppBar(
+        title: const Text("App"),
+        backgroundColor: Colors.amber.shade300,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: BlocBuilder<OrderBloc, OrderState>(
+          builder: (context, state) {
+            if (state.orderStatus == OrderStatus.success) {
+              // นำข้อมูล orders มาแสดงที่นี่
+              List<Order> orders = state.result ?? [];
 
-            // ตรวจสอบว่ามีข้อมูล order หรือไม่
-            if (orders.isNotEmpty) {
-              return ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  Order items = orders[index];
-                  return Card(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.album),
-                          title: Text(items.orderName),
-                          subtitle: const Text(
-                              'Music by Julie Gable. Lyrics by Sidney Stein.'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+              // ตรวจสอบว่ามีข้อมูล order หรือไม่
+              if (orders.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    Order items = orders[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Card(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            TextButton(
-                              child: const Text('BUY TICKETS'),
-                              onPressed: () {/* ... */},
+                            ListTile(
+                              title: Text(items.orderName),
+                              subtitle: Text(items.description),
                             ),
-                            const SizedBox(width: 8),
-                            TextButton(
-                              child: const Text('LISTEN'),
-                              onPressed: () {/* ... */},
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    children: [
+                                      const Text("ร้าน"),
+                                      const SizedBox(width: 10),
+                                      Text(items.username),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      child: const Text('BUY TICKETS'),
+                                      onPressed: () {/* ... */},
+                                    ),
+                                    const SizedBox(width: 8),
+                                    TextButton(
+                                      child: const Text('LISTEN'),
+                                      onPressed: () {/* ... */},
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 8),
                           ],
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                    );
+                  },
+                );
+              } else {
+                // กรณีไม่มีข้อมูล order
+                return const Center(
+                  child: Text('No orders available.'),
+                );
+              }
+            } else if (state.orderStatus == OrderStatus.failed) {
+              // กรณีเกิดข้อผิดพลาดในการโหลดข้อมูล
+              return const Center(
+                child: Text('Failed to load orders.'),
               );
             } else {
-              // กรณีไม่มีข้อมูล order
+              // กรณีกำลังโหลดข้อมูล
               return const Center(
-                child: Text('No orders available.'),
+                child: CircularProgressIndicator(),
               );
             }
-          } else if (state.orderStatus == OrderStatus.failed) {
-            // กรณีเกิดข้อผิดพลาดในการโหลดข้อมูล
-            return const Center(
-              child: Text('Failed to load orders.'),
-            );
-          } else {
-            // กรณีกำลังโหลดข้อมูล
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }
