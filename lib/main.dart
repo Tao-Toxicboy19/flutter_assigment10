@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
-import 'package:flutter_assigment10v1/bloc/bloc/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order/order_bloc.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

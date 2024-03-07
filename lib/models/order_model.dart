@@ -11,26 +11,26 @@ String orderToJson(List<Order> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Order {
-  String id;
+  String? id;
   String beerName;
   String description;
   String alcohol;
   int price;
   int stock;
-  String image;
-  String shopName;
-  String userId;
+  String? image;
+  String? shopName;
+  String? userId;
 
   Order({
-    required this.id,
+    this.id,
     required this.beerName,
     required this.description,
     required this.alcohol,
     required this.price,
     required this.stock,
-    required this.image,
-    required this.shopName,
-    required this.userId,
+    this.image,
+    this.shopName,
+    this.userId,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(

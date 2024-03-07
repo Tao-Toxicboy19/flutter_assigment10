@@ -14,3 +14,5 @@ class RegisterEvent extends AuthEvent {
   final User payload;
   RegisterEvent(this.payload);
 }
+
+class MeEvent extends AuthEvent {}

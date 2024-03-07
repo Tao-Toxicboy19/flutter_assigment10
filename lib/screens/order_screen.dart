@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
-import 'package:flutter_assigment10v1/bloc/bloc/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order/order_bloc.dart';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
@@ -21,7 +22,9 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     final OrderBloc ordersBloc = context.read<OrderBloc>();
+    final AuthBloc authBloc = context.read<AuthBloc>();
     ordersBloc.add(FetchOrdersEvent());
+    authBloc.add(MeEvent());
     super.initState();
   }
 
@@ -50,7 +53,7 @@ class _OrderScreenState extends State<OrderScreen> {
                             SizedBox(
                               width: 120,
                               child: CachedNetworkImage(
-                                imageUrl: imageUrl + items.image,
+                                imageUrl: imageUrl + items.image!,
                                 height: 100,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:

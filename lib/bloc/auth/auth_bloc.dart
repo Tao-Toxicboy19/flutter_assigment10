@@ -7,6 +7,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/main.dart';
+import 'package:flutter_assigment10v1/models/me_model.dart';
 import 'package:flutter_assigment10v1/models/user_model.dart';
 import 'package:flutter_assigment10v1/services/dio_config.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
@@ -102,6 +103,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 AppRouter.login,
               );
             }
+          } else {
+            // Handle non-200 status code as an error
+            logger.e('Error: ${result.statusCode}');
+            emit(const AuthState(authStatus: AuthStatus.failed));
+          }
+        } catch (err) {
+          // Handle other errors (e.g., network error, parsing error)
+          logger.e('Error: $err');
+          emit(const AuthState(authStatus: AuthStatus.failed));
+        }
+      },
+    );
+
+    on<MeEvent>(
+      (event, emit) async {
+        try {
+          final NetworkConnect newNetworkConnect = NetworkConnect();
+          final Dio dio = DioConfig.dioWithAuth;
+
+          if (newNetworkConnect.checkNetwork() == '') {
+            emit(const AuthState(
+                authStatus: AuthStatus.failed,
+                errorMessage: 'No network is connected'));
+            return;
+          }
+
+          final result = await dio.get('auth/me');
+
+          // Handle the response as needed
+          if (result.statusCode == 200) {
+            // ส่งสถานะ AuthStatus.success และทำการ navigation
+            final Me me = Me.fromJson(result.data);
+            logger.i(result.data);
+            emit(AuthState(
+              authStatus: AuthStatus.success,
+              me: me,
+            ));
           } else {
             // Handle non-200 status code as an error
             logger.e('Error: ${result.statusCode}');
