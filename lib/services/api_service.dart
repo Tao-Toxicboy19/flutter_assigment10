@@ -16,16 +16,17 @@ class CallAPI {
   // Create Product API Method -------------------------------------------------
   Future<String> addProductAPI(value, {File? imageFile}) async {
     FormData data = FormData.fromMap({
-      'beerName': value["beerName"],
-      'description': value["description"],
-      'alcohol': value["alcohol"],
-      'price': value["price"],
-      'stock': value["stock"],
-      'user_id': value["userId"],
+      "beerName": value["beerName"],
+      "description": value["description"],
+      "Alcohol": value["alcohol"],
+      "price": value["price"],
+      "stock": value["stock"],
+      "ShopName": value["shopName"],
+      "UserId": value["user_id"],
       if (imageFile != null)
-        'files': await MultipartFile.fromFile(
+        "files": await MultipartFile.fromFile(
           imageFile.path,
-          contentType: MediaType('image', 'jpg'),
+          contentType: MediaType("image", "jpg"),
         ),
     });
     // logger.d(data);

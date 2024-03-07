@@ -20,11 +20,20 @@ class _AddOrderFormState extends State<AddOrderForm> {
 
   final _beerNameController = TextEditingController();
 
+  final _priceController = TextEditingController();
+
+  final _alcoholController = TextEditingController();
+
+  final _stockController = TextEditingController();
+
+  final _descriptionController = TextEditingController();
+
   String? image;
+
+  File? _imageFile;
 
   @override
   Widget build(BuildContext context) {
-    // final bloc = BlocProvider.of<AuthBloc>(context);
     return Form(
       key: _formKeyAddOrder,
       child: SingleChildScrollView(
@@ -40,10 +49,59 @@ class _AddOrderFormState extends State<AddOrderForm> {
                   : null,
             ),
             const SizedBox(height: 10.0),
+            customTextFieldProduct(
+              controller: _priceController,
+              obscureText: false,
+              labelText: "ราคา",
+              validator: (value) => (value == null || value.isEmpty)
+                  ? 'Please enter some text'
+                  : null,
+            ),
+            const SizedBox(height: 10.0),
+            customTextFieldProduct(
+              controller: _alcoholController,
+              obscureText: false,
+              labelText: "แอลกอฮอล์",
+              validator: (value) => (value == null || value.isEmpty)
+                  ? 'Please enter some text'
+                  : null,
+            ),
+            const SizedBox(height: 10.0),
+            customTextFieldProduct(
+              controller: _stockController,
+              obscureText: false,
+              labelText: "จำนวนสินค้า",
+              validator: (value) => (value == null || value.isEmpty)
+                  ? 'Please enter some text'
+                  : null,
+            ),
+            const SizedBox(height: 10.0),
+            customTextFieldProduct(
+              controller: _descriptionController,
+              obscureText: false,
+              labelText: "รายละเอียด",
+              validator: (value) => (value == null || value.isEmpty)
+                  ? 'Please enter some text'
+                  : null,
+            ),
+            ProductImage(
+              _callBackSetImage,
+              image: image,
+            ),
             ElevatedButton(
               onPressed: () {
                 final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-                logger.f(authBloc.state.me!.sub);
+                final value = {
+                  "user_id": authBloc.state.me!.sub,
+                  "beerName": _beerNameController.text,
+                  "description": _descriptionController.text,
+                  "price": _priceController.text,
+                  "stock": _stockController.text,
+                  "alcohol": _alcoholController.text,
+                  "shopName": authBloc.state.me!.shopName,
+                };
+                final CallAPI service = CallAPI();
+                service.addProductAPI(value, imageFile: _imageFile);
               },
               child: const Text("Print Me Data"),
             )
@@ -52,14 +110,11 @@ class _AddOrderFormState extends State<AddOrderForm> {
       ),
     );
   }
+
+  // ฟังก์ชันสำหรับเลือกรูปภาพ
+  void _callBackSetImage(File? imageFile) {
+    setState(() {
+      _imageFile = imageFile;
+    });
+  }
 }
-
-
-//  final value = {
-//                   "beerName": _beerNameController.text,
-//                   "description": _descriptionController.text,
-//                   "price": _priceController.text,
-//                   "stock": _stockController.text,
-//                 };
-//                 final CallAPI service = CallAPI();
-//                 service.addProductAPI(value, imageFile: _imageFile);
