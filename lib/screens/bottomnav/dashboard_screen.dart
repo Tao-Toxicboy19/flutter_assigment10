@@ -1,12 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
 
 import 'package:flutter/material.dart';
-import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/screens/add_order_screen.dart';
 import 'package:flutter_assigment10v1/screens/order_screen.dart';
 import 'package:flutter_assigment10v1/screens/profile_screen.dart';
-import 'package:flutter_assigment10v1/utils/constants.dart';
-import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -44,14 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Future<void> _handlerLogout() async {
-    await MySharedPreferences.removeSharedPreference(token);
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRouter.login,
-      (route) => false,
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {

@@ -26,13 +26,35 @@ Widget customTextField({
       contentPadding: EdgeInsets.only(),
       border: (underlineText == true)
           ? UnderlineInputBorder()
-          : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
-              borderSide: const BorderSide(width: 0, style: BorderStyle.none),
-            ),
+          : OutlineInputBorder(),
+      // border: OutlineInputBorder(),
       // filled: true,
       isDense: true,
       // fillColor: Colors.grey[300],
+    ),
+    validator: validator,
+  );
+}
+
+Widget customTextFieldProduct({
+  required String labelText,
+  required bool obscureText,
+  TextInputType textInputType = TextInputType.text,
+  int maxLines = 1,
+  required String? Function(String?)? validator,
+  required TextEditingController controller,
+}) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: textInputType,
+    maxLines: maxLines,
+    autofocus: false,
+    enableSuggestions: false,
+    autocorrect: false,
+    obscureText: obscureText,
+    decoration: InputDecoration(
+      border: OutlineInputBorder(),
+      labelText: labelText,
     ),
     validator: validator,
   );

@@ -6,8 +6,10 @@ class AddOrderForm extends StatelessWidget {
 
   final _formKeyAddOrder = GlobalKey<FormState>();
 
-  final _orderNameController = TextEditingController();
+  final _beerNameController = TextEditingController();
   final _priceController = TextEditingController();
+  final _alcoholController = TextEditingController();
+  final _stockController = TextEditingController();
   final _descriptionController = TextEditingController();
 
   @override
@@ -16,32 +18,50 @@ class AddOrderForm extends StatelessWidget {
       key: _formKeyAddOrder,
       child: Column(
         children: [
-          customTextField(
-            controller: _orderNameController,
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _beerNameController,
+            labelText: "ชื่อเบียร์",
             obscureText: false,
-            labelText: "Product name",
             validator: (value) => (value == null || value.isEmpty)
                 ? 'Please enter some text'
                 : null,
-            underlineText: true,
           ),
-          customTextField(
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
             controller: _priceController,
             obscureText: false,
-            labelText: "Price",
+            labelText: "ราคา",
             validator: (value) => (value == null || value.isEmpty)
                 ? 'Please enter some text'
                 : null,
-            underlineText: true,
           ),
-          customTextField(
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _alcoholController,
+            obscureText: false,
+            labelText: "แอลกอฮอล์",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _stockController,
+            obscureText: false,
+            labelText: "จำนวนสินค้า",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
             controller: _descriptionController,
             obscureText: false,
-            labelText: "Description",
+            labelText: "รายละเอียด",
             validator: (value) => (value == null || value.isEmpty)
                 ? 'Please enter some text'
                 : null,
-            underlineText: true,
           ),
         ],
       ),

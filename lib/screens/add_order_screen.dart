@@ -7,7 +7,12 @@ class AddOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AddOrderForm(),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: AddOrderForm(),
+        ),
+      ),
     );
   }
 }
