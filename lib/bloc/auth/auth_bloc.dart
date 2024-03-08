@@ -51,7 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             if (navigatorState.currentContext != null) {
               Navigator.pushNamedAndRemoveUntil(
                 navigatorState.currentContext!,
-                AppRouter.dashboard,
+                AppRouter.product,
                 (route) => false, // ลบทุกหน้าออกจาก stack
               );
             }
@@ -132,6 +132,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           // Handle the response as needed
           if (result.statusCode == 200) {
+            logger.i(result.data);
             // ส่งสถานะ AuthStatus.success และทำการ navigation
             final Me me = Me.fromJson(result.data);
             emit(AuthState(

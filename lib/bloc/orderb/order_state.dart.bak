@@ -1,4 +1,4 @@
-part of 'order_bloc.bak';
+part of 'order_bloc.dart';
 
 enum OrderStatus { loading, success, failed }
 

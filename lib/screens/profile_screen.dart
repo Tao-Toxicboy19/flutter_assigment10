@@ -20,8 +20,58 @@ class ProfileScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      body:
-          ElevatedButton(onPressed: handlerLogout, child: const Text("logout")),
+      appBar: AppBar(
+        title: const Text("Profile"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "ชื่อร้าน นายก",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "อีเมล",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "อีเมล",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouter.productmMy);
+              },
+              icon: const Icon(
+                Icons.shopping_cart,
+                size: 24.0,
+              ),
+              label: const Text("สินค้าของฉัน"),
+            ),
+            ElevatedButton(
+              onPressed: handlerLogout,
+              child: const Text("logout"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

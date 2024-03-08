@@ -1,31 +1,25 @@
-// ignore_for_file: use_build_context_synchronously, unused_element
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
-import 'package:flutter_assigment10v1/bloc/order/order_bloc.bak';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
-import 'package:flutter_assigment10v1/theme/colors.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
-import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+class ProductMyScreen extends StatefulWidget {
+  const ProductMyScreen({super.key});
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<ProductMyScreen> createState() => _ProductMyScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _ProductMyScreenState extends State<ProductMyScreen> {
   @override
   void initState() {
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     final OrderBloc ordersBloc = context.read<OrderBloc>();
-    final AuthBloc authBloc = context.read<AuthBloc>();
-    ordersBloc.add(FetchOrdersEvent());
-    authBloc.add(MeEvent());
+    ordersBloc.add(FetchOrderByUserIdEvent(authBloc.state.me!.sub));
     super.initState();
   }
 
@@ -33,56 +27,15 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Products",
-          style: TextStyle(
-            color: Colors.white70,
-          ),
-        ),
-        backgroundColor: primary,
+        title: const Text('สินค้าของฉัน'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Row(
-              children: [
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.shopping_cart,
-                        color: Colors.white70,
-                      ),
-                      onPressed: () {
-                        // เพิ่มโค้ดที่ต้องการทำเมื่อคลิกที่ปุ่ม "Shopping Cart" ที่นี่
-                      },
-                    ),
-                    const Positioned(
-                      top: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.red, // สีพื้นหลังของเลข
-                        child: Text(
-                          '5',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.person,
-                    color: Colors.white70,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRouter.profile);
-                  },
-                ),
-              ],
+            child: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouter.addOrder);
+              },
             ),
           ),
         ],
@@ -93,7 +46,7 @@ class _OrderScreenState extends State<OrderScreen> {
           builder: (context, state) {
             if (state.orderStatus == OrderStatus.success) {
               // นำข้อมูล orders มาแสดงที่นี่
-              List<Order> orders = state.result ?? [];
+              List<Order> orders = state.orderById ?? [];
 
               // ตรวจสอบว่ามีข้อมูล order หรือไม่
               if (orders.isNotEmpty) {
@@ -106,18 +59,18 @@ class _OrderScreenState extends State<OrderScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            // SizedBox(
-                            //   width: 120,
-                            //   child: CachedNetworkImage(
-                            //     imageUrl: imageUrl + items.image!,
-                            //     height: 100,
-                            //     fit: BoxFit.cover,
-                            //     progressIndicatorBuilder:
-                            //         (context, url, protected) => const Center(
-                            //       child: CircularProgressIndicator(),
-                            //     ),
-                            //   ),
-                            // ),
+                            SizedBox(
+                              width: 120,
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl + items.image!,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, protected) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ),
                             Expanded(
                               child: Padding(
                                 padding:
@@ -174,7 +127,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                                 const SizedBox(height: 25),
                                 customButtom(
-                                    labelText: 'เพิ่มลงตะกร้า', onPressd: () {})
+                                    labelText: 'แก้ไข', onPressd: () {})
                               ],
                             ),
                           ],
@@ -185,8 +138,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 );
               } else {
                 // กรณีไม่มีข้อมูล order
-                return const Center(
-                  child: Text('No orders available.'),
+                return Center(
+                  child: Image.asset(
+                    "assets/images/notfound.png",
+                    height: 200,
+                  ),
                 );
               }
             } else if (state.orderStatus == OrderStatus.failed) {
@@ -203,15 +159,12 @@ class _OrderScreenState extends State<OrderScreen> {
           },
         ),
       ),
-    );
-  }
-
-  Future<void> _handlerLogout(BuildContext context) async {
-    await MySharedPreferences.removeSharedPreference(token);
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRouter.login,
-      (route) => false,
+      // body: Center(
+      //   child: Image.asset(
+      //     "assets/images/notfound.png",
+      //     height: 200,
+      //   ),
+      // ),
     );
   }
 }
