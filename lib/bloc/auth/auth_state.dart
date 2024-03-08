@@ -5,11 +5,15 @@ enum AuthStatus { loading, success, failed }
 class AuthState extends Equatable {
   final String? username;
   final String? password;
+  final String? email;
+  final String? shopName;
   final Me? me;
   final String? errorMessage;
   final AuthStatus authStatus;
 
   const AuthState({
+    this.email,
+    this.shopName,
     this.username,
     this.password,
     this.me,
@@ -20,6 +24,8 @@ class AuthState extends Equatable {
   AuthState copyWith({
     String? username,
     String? password,
+    String? email,
+    String? shopName,
     Me? me,
     String? errorMessage,
     AuthStatus? authStatus,
@@ -27,6 +33,8 @@ class AuthState extends Equatable {
     return AuthState(
       username: username ?? this.username,
       password: password ?? this.password,
+      email: email ?? this.email,
+      shopName: shopName ?? this.shopName,
       me: me ?? this.me,
       errorMessage: errorMessage ?? this.errorMessage,
       authStatus: authStatus ?? this.authStatus,
@@ -34,5 +42,6 @@ class AuthState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [username, password, me, errorMessage, authStatus];
+  List<Object?> get props =>
+      [username, password, email, shopName, me, errorMessage, authStatus];
 }

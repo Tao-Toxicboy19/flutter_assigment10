@@ -39,7 +39,37 @@ class LoginForm extends StatelessWidget {
                 : null,
             underlineText: true,
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 10.0),
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state.authStatus == AuthStatus.failed) {
+                return Container(
+                  width: double.infinity,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red.shade900,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Login Failed',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red.shade900,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          const SizedBox(height: 10.0),
           SizedBox(
             width: double.infinity,
             height: 45.0,
@@ -58,18 +88,23 @@ class LoginForm extends StatelessWidget {
                 Navigator.pushNamed(context, AppRouter.register);
               },
             ),
-          )
+          ),
+          const SizedBox(height: 20),
+          Image.asset("assets/images/login.png")
         ],
       ),
     );
   }
 
   void handleLogin(BuildContext context) {
-    final authBloc = context.read<AuthBloc>();
-    final user = User(
-      username: _usernameController.text,
-      password: _passwordController.text,
-    );
-    authBloc.add(LoginEvent(user));
+    if (_formKeyLogin.currentState!.validate()) {
+      _formKeyLogin.currentState!.save();
+      final authBloc = context.read<AuthBloc>();
+      final user = User(
+        username: _usernameController.text,
+        password: _passwordController.text,
+      );
+      authBloc.add(LoginEvent(user));
+    }
   }
 }

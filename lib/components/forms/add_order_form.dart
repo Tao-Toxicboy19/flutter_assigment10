@@ -5,7 +5,6 @@ import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
 import 'package:flutter_assigment10v1/components/product_image.dart';
 import 'package:flutter_assigment10v1/components/share/custom_textfield.dart';
 import 'package:flutter_assigment10v1/services/api_service.dart';
-import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddOrderForm extends StatefulWidget {
@@ -36,60 +35,64 @@ class _AddOrderFormState extends State<AddOrderForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKeyAddOrder,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10.0),
-            customTextFieldProduct(
-              controller: _beerNameController,
-              labelText: "ชื่อเบียร์",
-              obscureText: false,
-              validator: (value) => (value == null || value.isEmpty)
-                  ? 'Please enter some text'
-                  : null,
-            ),
-            const SizedBox(height: 10.0),
-            customTextFieldProduct(
-              controller: _priceController,
-              obscureText: false,
-              labelText: "ราคา",
-              validator: (value) => (value == null || value.isEmpty)
-                  ? 'Please enter some text'
-                  : null,
-            ),
-            const SizedBox(height: 10.0),
-            customTextFieldProduct(
-              controller: _alcoholController,
-              obscureText: false,
-              labelText: "แอลกอฮอล์",
-              validator: (value) => (value == null || value.isEmpty)
-                  ? 'Please enter some text'
-                  : null,
-            ),
-            const SizedBox(height: 10.0),
-            customTextFieldProduct(
-              controller: _stockController,
-              obscureText: false,
-              labelText: "จำนวนสินค้า",
-              validator: (value) => (value == null || value.isEmpty)
-                  ? 'Please enter some text'
-                  : null,
-            ),
-            const SizedBox(height: 10.0),
-            customTextFieldProduct(
-              controller: _descriptionController,
-              obscureText: false,
-              labelText: "รายละเอียด",
-              validator: (value) => (value == null || value.isEmpty)
-                  ? 'Please enter some text'
-                  : null,
-            ),
-            ProductImage(
-              _callBackSetImage,
-              image: image,
-            ),
-            ElevatedButton(
-              onPressed: () {
+      child: Column(
+        children: [
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _beerNameController,
+            labelText: "ชื่อเบียร์",
+            obscureText: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'กรุณากรอกชื่อสินค้า';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _priceController,
+            obscureText: false,
+            labelText: "ราคา",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _alcoholController,
+            obscureText: false,
+            labelText: "แอลกอฮอล์",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _stockController,
+            obscureText: false,
+            labelText: "จำนวนสินค้า",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          const SizedBox(height: 10.0),
+          customTextFieldProduct(
+            controller: _descriptionController,
+            obscureText: false,
+            labelText: "รายละเอียด",
+            validator: (value) => (value == null || value.isEmpty)
+                ? 'Please enter some text'
+                : null,
+          ),
+          ProductImage(
+            _callBackSetImage,
+            image: image,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKeyAddOrder.currentState!.validate()) {
+                _formKeyAddOrder.currentState!.save();
                 final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
                 final value = {
                   "user_id": authBloc.state.me!.sub,
@@ -102,11 +105,11 @@ class _AddOrderFormState extends State<AddOrderForm> {
                 };
                 final CallAPI service = CallAPI();
                 service.addProductAPI(value, imageFile: _imageFile);
-              },
-              child: const Text("Print Me Data"),
-            )
-          ],
-        ),
+              }
+            },
+            child: const Text("Print Me Data"),
+          )
+        ],
       ),
     );
   }

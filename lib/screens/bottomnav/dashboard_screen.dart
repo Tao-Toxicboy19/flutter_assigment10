@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/screens/add_order_screen.dart';
 import 'package:flutter_assigment10v1/screens/order_screen.dart';
 import 'package:flutter_assigment10v1/screens/profile_screen.dart';
+import 'package:flutter_assigment10v1/theme/colors.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -34,28 +35,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
             _title = "Products";
             break;
           case 2:
-            _title = "Home";
+            _title = "Profile";
             break;
         }
       },
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
-        backgroundColor: Colors.amber.shade300,
+        title: Text(
+          _title,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        backgroundColor: primary,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Stack(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.shopping_cart),
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white70,
+                  ),
                   onPressed: () {},
                 ),
                 const Positioned(

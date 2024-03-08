@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assigment10v1/theme/colors.dart';
 
 Widget customButtom({
   required String labelText,
@@ -12,12 +13,12 @@ Widget customButtom({
         color: Colors.black,
       ),
     ),
-    color: null, // กำหนดให้เป็นสีโปร่งใส
+    color: primary, // กำหนดให้เป็นสีโปร่งใส
     highlightColor: null, // สีที่ต้องการเมื่อกด
     child: Text(
       labelText,
       style: const TextStyle(
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
   );

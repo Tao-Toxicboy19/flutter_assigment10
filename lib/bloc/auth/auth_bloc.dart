@@ -1,7 +1,5 @@
 // ignore_for_file: unrelated_type_equality_checks
 
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           }
           final value = {
             "username": event.payload.username,
-            "password": event.payload.password
+            "password": event.payload.password,
           };
 
           final result = await dio.post('signin', data: value);
@@ -85,12 +83,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           final value = {
             "username": event.payload.username,
-            "password": event.payload.password
+            "password": event.payload.password,
+            "email": event.payload.email,
+            "shopname": event.payload.shopName,
           };
 
           final result = await dio.post('signup', data: value);
 
-          logger.d(jsonEncode(result.data));
           // Handle the response as needed
           if (result.statusCode == 201) {
             // ส่งสถานะ AuthStatus.success และทำการ navigation
@@ -135,7 +134,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (result.statusCode == 200) {
             // ส่งสถานะ AuthStatus.success และทำการ navigation
             final Me me = Me.fromJson(result.data);
-            logger.i(result.data);
             emit(AuthState(
               authStatus: AuthStatus.success,
               me: me,
