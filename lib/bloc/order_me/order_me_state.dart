@@ -30,5 +30,5 @@ class OrderMeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [orders, orderById, errorMessage, OrderMeStatus];
+  List<Object?> get props => [orders, orderById, errorMessage, oderMeStatus];
 }

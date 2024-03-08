@@ -1,13 +1,16 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/cart_count/cart_count_bloc.dart';
 import 'package:flutter_assigment10v1/bloc/order/order_bloc.dart';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_assigment10v1/theme/colors.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
+import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,20 +58,27 @@ class _OrderScreenState extends State<OrderScreen> {
                         // เพิ่มโค้ดที่ต้องการทำเมื่อคลิกที่ปุ่ม "Shopping Cart" ที่นี่
                       },
                     ),
-                    const Positioned(
-                      top: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.red, // สีพื้นหลังของเลข
-                        child: Text(
-                          '5',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
+                    BlocBuilder<CartCountBloc, CartCountState>(
+                      builder: (context, state) {
+                        return state.cartCount != 0
+                            ? Positioned(
+                                top: 0,
+                                right: 0,
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor:
+                                      Colors.red, // สีพื้นหลังของเลข
+                                  child: Text(
+                                    state.cartCount.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink();
+                      },
                     ),
                   ],
                 ),
@@ -105,18 +115,18 @@ class _OrderScreenState extends State<OrderScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            // SizedBox(
-                            //   width: 120,
-                            //   child: CachedNetworkImage(
-                            //     imageUrl: imageUrl + items.image!,
-                            //     height: 100,
-                            //     fit: BoxFit.cover,
-                            //     progressIndicatorBuilder:
-                            //         (context, url, protected) => const Center(
-                            //       child: CircularProgressIndicator(),
-                            //     ),
-                            //   ),
-                            // ),
+                            SizedBox(
+                              width: 120,
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl + items.image!,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, protected) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ),
                             Expanded(
                               child: Padding(
                                 padding:
@@ -173,7 +183,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                                 const SizedBox(height: 25),
                                 customButtom(
-                                    labelText: 'เพิ่มลงตะกร้า', onPressd: () {})
+                                    labelText: 'เพิ่มลงตะกร้า',
+                                    onPressd: cartCount)
                               ],
                             ),
                           ],
@@ -212,5 +223,12 @@ class _OrderScreenState extends State<OrderScreen> {
       AppRouter.login,
       (route) => false,
     );
+  }
+
+  void cartCount() {
+    final CartCountBloc count = BlocProvider.of<CartCountBloc>(context);
+    final CartCountBloc cartCount = context.read<CartCountBloc>();
+    cartCount.add(CartCountsEvent());
+    logger.f(count.state.cartCount);
   }
 }
