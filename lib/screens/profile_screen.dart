@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
+import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -28,31 +30,22 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "ชื่อร้าน นายก",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.3,
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return buildText("ชื่อร้าน", state.me!.shopName);
+              },
             ),
             const SizedBox(height: 16),
-            const Text(
-              "อีเมล",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.3,
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return buildText("อีเมล", state.me!.email);
+              },
             ),
             const SizedBox(height: 16),
-            const Text(
-              "อีเมล",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.3,
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return buildText("ชื่อผู้ใช้", state.me!.username);
+              },
             ),
             const SizedBox(height: 16),
             TextButton.icon(
@@ -65,12 +58,33 @@ class ProfileScreen extends StatelessWidget {
               ),
               label: const Text("สินค้าของฉัน"),
             ),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouter.addOrder);
+              },
+              icon: const Icon(
+                Icons.add,
+                size: 24.0,
+              ),
+              label: const Text("เพิ่มสินค้า"),
+            ),
             ElevatedButton(
               onPressed: handlerLogout,
               child: const Text("logout"),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildText(String title, String value) {
+    return Text(
+      "$title $value",
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.3,
       ),
     );
   }

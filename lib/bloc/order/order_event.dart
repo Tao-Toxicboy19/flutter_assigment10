@@ -1,4 +1,4 @@
-part of 'order_bloc.bak';
+part of 'order_bloc.dart'; // Make sure to include the correct file name
 
 sealed class OrderEvent extends Equatable {
   const OrderEvent();
@@ -8,15 +8,3 @@ sealed class OrderEvent extends Equatable {
 }
 
 class FetchOrdersEvent extends OrderEvent {}
-
-class AddOrderEvent extends OrderEvent {
-  final Order payload;
-  final io.File? file; // Use the alias here
-
-  const AddOrderEvent(this.payload, this.file);
-}
-
-class FetchOrderByUserIdEvent extends OrderEvent {
-  final String userId;
-  const FetchOrderByUserIdEvent(this.userId);
-}

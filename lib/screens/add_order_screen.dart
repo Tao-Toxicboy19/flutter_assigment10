@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
-import 'package:flutter_assigment10v1/bloc/orderb/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/components/product_image.dart';
 import 'package:flutter_assigment10v1/components/share/custom_textfield.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
@@ -133,7 +133,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     if (formKeyAddOrder.currentState!.validate()) {
       formKeyAddOrder.currentState!.save();
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-      final OrderBloc orderBloc = context.read<OrderBloc>();
+      final OrderMeBloc orderBloc = context.read<OrderMeBloc>();
 
       final value = Order(
         beerName: beerNameController.text,
@@ -144,8 +144,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
         shopName: authBloc.state.me!.shopName,
         userId: authBloc.state.me!.sub,
       );
-      orderBloc.add(AddOrderEvent(value, _imageFile));
-      // orderBloc.add(FetchOrdersEvent());
+      orderBloc.add(AddOrderMeEvent(value, _imageFile));
     }
   }
 }

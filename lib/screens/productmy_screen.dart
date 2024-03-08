@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
@@ -18,8 +19,8 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
   @override
   void initState() {
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-    final OrderBloc ordersBloc = context.read<OrderBloc>();
-    ordersBloc.add(FetchOrderByUserIdEvent(authBloc.state.me!.sub));
+    final OrderMeBloc ordersMeBloc = context.read<OrderMeBloc>();
+    ordersMeBloc.add(FetchOrderByUserIdEvent(authBloc.state.me!.sub));
     super.initState();
   }
 
@@ -28,23 +29,12 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('สินค้าของฉัน'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.pushNamed(context, AppRouter.addOrder);
-              },
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: BlocBuilder<OrderBloc, OrderState>(
+        child: BlocBuilder<OrderMeBloc, OrderMeState>(
           builder: (context, state) {
-            if (state.orderStatus == OrderStatus.success) {
+            if (state.oderMeStatus == OrderMeStatus.success) {
               // นำข้อมูล orders มาแสดงที่นี่
               List<Order> orders = state.orderById ?? [];
 
@@ -145,7 +135,7 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
                   ),
                 );
               }
-            } else if (state.orderStatus == OrderStatus.failed) {
+            } else if (state.oderMeStatus == OrderMeStatus.failed) {
               // กรณีเกิดข้อผิดพลาดในการโหลดข้อมูล
               return const Center(
                 child: Text('Failed to load orders.'),

@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
-import 'package:flutter_assigment10v1/bloc/orderb/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order/order_bloc.dart';
+import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,11 +33,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final authBloc = BlocProvider(create: (context) => AuthBloc());
     final orderBloc = BlocProvider(create: (context) => OrderBloc());
+    final orderMeBloc = BlocProvider(create: (context) => OrderMeBloc());
 
     return MultiBlocProvider(
       providers: [
         authBloc,
         orderBloc,
+        orderMeBloc,
       ],
       child: MaterialApp(
         title: 'Material App',
