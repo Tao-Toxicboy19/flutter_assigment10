@@ -7,4 +7,9 @@ sealed class CartCountEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CartCountsEvent extends CartCountEvent {}
+class CartCountsEvent extends CartCountEvent {
+  final Order order;
+  const CartCountsEvent(this.order);
+}
+
+class FetchCountsEvent extends CartCountEvent {}

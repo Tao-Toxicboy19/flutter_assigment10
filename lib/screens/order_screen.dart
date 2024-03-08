@@ -10,7 +10,6 @@ import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_assigment10v1/theme/colors.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
-import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:flutter_assigment10v1/utils/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,11 +34,15 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Products",
-          style: TextStyle(
-            color: Colors.white70,
-          ),
+        title: BlocBuilder<CartCountBloc, CartCountState>(
+          builder: (context, state) {
+            return Text(
+              state.quantity.length.toString(),
+              style: const TextStyle(
+                color: Colors.white70,
+              ),
+            );
+          },
         ),
         backgroundColor: primary,
         actions: [
@@ -55,12 +58,12 @@ class _OrderScreenState extends State<OrderScreen> {
                         color: Colors.white70,
                       ),
                       onPressed: () {
-                        // เพิ่มโค้ดที่ต้องการทำเมื่อคลิกที่ปุ่ม "Shopping Cart" ที่นี่
+                        Navigator.pushNamed(context, AppRouter.cart);
                       },
                     ),
                     BlocBuilder<CartCountBloc, CartCountState>(
                       builder: (context, state) {
-                        return state.cartCount != 0
+                        return state.productCount != 0
                             ? Positioned(
                                 top: 0,
                                 right: 0,
@@ -69,7 +72,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   backgroundColor:
                                       Colors.red, // สีพื้นหลังของเลข
                                   child: Text(
-                                    state.cartCount.toString(),
+                                    state.productCount.toString(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -119,7 +122,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               width: 120,
                               child: CachedNetworkImage(
                                 imageUrl: imageUrl + items.image!,
-                                height: 100,
+                                // height: 100,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, protected) => const Center(
@@ -166,26 +169,26 @@ class _OrderScreenState extends State<OrderScreen> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "ราคา ${items.price}",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        customButtom(
+                                          labelText: 'เพิ่มลงตะกร้า',
+                                          onPressd: () => cartCount(items),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "ราคา ${items.price}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 25),
-                                customButtom(
-                                    labelText: 'เพิ่มลงตะกร้า',
-                                    onPressd: cartCount)
-                              ],
                             ),
                           ],
                         ),
@@ -225,10 +228,8 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  void cartCount() {
-    final CartCountBloc count = BlocProvider.of<CartCountBloc>(context);
+  void cartCount(Order order) {
     final CartCountBloc cartCount = context.read<CartCountBloc>();
-    cartCount.add(CartCountsEvent());
-    logger.f(count.state.cartCount);
+    cartCount.add(CartCountsEvent(order));
   }
 }

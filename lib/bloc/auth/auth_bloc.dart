@@ -134,7 +134,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (result.statusCode == 200) {
             // ส่งสถานะ AuthStatus.success และทำการ navigation
             final Me me = Me.fromJson(result.data);
-            logger.f(result.data);
             emit(AuthState(
               authStatus: AuthStatus.success,
               me: me,

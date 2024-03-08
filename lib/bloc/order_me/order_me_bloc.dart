@@ -1,6 +1,7 @@
+// ignore_for_file: unnecessary_import, depend_on_referenced_packages
+
 import 'dart:io';
 
-// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -25,6 +26,7 @@ class OrderMeBloc extends Bloc<OrderMeEvent, OrderMeState> {
           final NetworkConnect newNetworkConnect = NetworkConnect();
           final Dio dio = DioConfig.dioWithAuth;
 
+          // ignore: unrelated_type_equality_checks
           if (newNetworkConnect.checkNetwork() == '') {
             emit(const OrderMeState(
                 oderMeStatus: OrderMeStatus.failed,
@@ -32,7 +34,6 @@ class OrderMeBloc extends Bloc<OrderMeEvent, OrderMeState> {
           }
 
           FormData data = FormData.fromMap({
-            "id": "1223",
             "beerName": event.payload.beerName,
             "description": event.payload.description,
             "Alcohol": event.payload.alcohol,
