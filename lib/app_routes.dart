@@ -7,6 +7,7 @@ import 'package:flutter_assigment10v1/screens/order_screen.dart';
 import 'package:flutter_assigment10v1/screens/productmy_screen.dart';
 import 'package:flutter_assigment10v1/screens/profile_screen.dart';
 import 'package:flutter_assigment10v1/screens/register_screen.dart';
+import 'package:flutter_assigment10v1/screens/update_order_screen.dart';
 
 class AppRouter {
   static const String login = 'login';
@@ -16,6 +17,7 @@ class AppRouter {
   static const String addOrder = 'addOrder';
   static const String productmMy = 'productmMy';
   static const String cart = 'cart';
+  static const String updateOrder = 'updateOrder';
 
   static get routes => {
         login: (context) => LoginScreen(),
@@ -25,5 +27,6 @@ class AppRouter {
         addOrder: (context) => AddOrderScreen(),
         productmMy: (context) => ProductMyScreen(),
         cart: (context) => CartScreen(),
+        updateOrder: (context) => UpdateOrderScreen()
       };
 }

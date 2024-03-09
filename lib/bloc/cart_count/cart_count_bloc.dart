@@ -14,39 +14,94 @@ class CartCountBloc extends Bloc<CartCountEvent, CartCountState> {
       (event, emit) {
         final List<Order> orders = List<Order>.from(state.cartOrder ?? []);
 
+        // เพิ่ม id ของ order เข้าไปใน quantity
+        final List<String> updatedQuantity = List<String>.from(state.quantity);
+        updatedQuantity.add(event.order.id ?? '');
+
         // ตรวจสอบว่า event.order ยังไม่มีอยู่ในรายการ
         if (!orders.contains(event.order)) {
           orders.add(event.order);
 
-          // ดึง Order ID จาก event.order และเพิ่มเข้าไปใน quantity
-          final String orderID =
-              event.order.id ?? ''; // ดักเพื่อไม่ให้เกิด Null Exception
-          final List<String> updatedQuantity =
-              List<String>.from(state.quantity ?? []);
-          updatedQuantity.add(orderID);
+          // นับจำนวน id ที่เหมือนกัน
+          final Map<String, int> idCounts = {};
+          for (var id in updatedQuantity) {
+            idCounts[id] = (idCounts[id] ?? 0) + 1;
+          }
 
           emit(
             state.copyWith(
               cartCount: state.cartCount + 1,
               cartOrder: orders,
-              productCount: state.productCount + 1,
               quantity: updatedQuantity,
+              productCount: idCounts,
             ),
           );
         } else {
+          // นับจำนวน id ที่เหมือนกัน
+          final Map<String, int> idCounts = {};
+          for (var id in updatedQuantity) {
+            idCounts[id] = (idCounts[id] ?? 0) + 1;
+          }
+
           emit(
             state.copyWith(
-              productCount: state.productCount + 1,
-              quantity: state.quantity,
+              quantity: updatedQuantity,
+              productCount: idCounts,
             ),
           );
         }
       },
     );
 
+    on<CartAddEvent>(
+      (event, emit) {
+        final List<String> updatedQuantity = List<String>.from(state.quantity);
+
+        // ลบ 1 รายการที่มี id ที่ตรงกับ event.id จาก updatedQuantity
+        updatedQuantity.add(event.id);
+
+        // นับจำนวน id ที่เหมือนกัน
+        final Map<String, int> idCounts = {};
+        for (var id in updatedQuantity) {
+          idCounts[id] = (idCounts[id] ?? 0) + 1;
+        }
+
+        emit(
+          state.copyWith(
+            status: CartCountStatus.success,
+            quantity: updatedQuantity,
+            productCount: idCounts,
+          ),
+        );
+      },
+    );
+
+    on<CartRemoveEvent>(
+      (event, emit) {
+        final List<String> updatedQuantity = List<String>.from(state.quantity);
+
+        // ลบ 1 รายการที่มี id ที่ตรงกับ event.id จาก updatedQuantity
+        updatedQuantity.remove(event.id);
+
+        // นับจำนวน id ที่เหมือนกัน
+        final Map<String, int> idCounts = {};
+        for (var id in updatedQuantity) {
+          idCounts[id] = (idCounts[id] ?? 0) + 1;
+        }
+
+        emit(
+          state.copyWith(
+            status: CartCountStatus.success,
+            quantity: updatedQuantity,
+            productCount: idCounts,
+          ),
+        );
+      },
+    );
+
     on<FetchCountsEvent>(
       (event, emit) {
-        logger.t("OK");
+        logger.d("hello add");
         emit(state.copyWith(status: CartCountStatus.success));
       },
     );

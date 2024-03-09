@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
+import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -46,6 +47,8 @@ class _ProductImageState extends State<ProductImage> {
 
   Widget _buildPreviewImage() {
     final image = widget.image;
+    logger.t(image);
+
     if ((image == null || image.isEmpty) && _imageFile == null) {
       return const SizedBox();
     }

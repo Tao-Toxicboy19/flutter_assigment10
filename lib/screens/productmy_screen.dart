@@ -1,10 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
 import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
+import 'package:flutter_assigment10v1/services/dio_config.dart';
+import 'package:flutter_assigment10v1/theme/colors.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
+import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductMyScreen extends StatefulWidget {
@@ -99,6 +106,13 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
+                                    Text(
+                                      "ราคา ${items.price}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -107,16 +121,44 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "ราคา ${items.price}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                InkWell(
+                                  onTap: () {
+                                    showDeleteConfirmationDialog(
+                                        context, items.id!);
+                                  },
+                                  child: Container(
+                                    width: 40, // กำหนดความกว้าง
+                                    height: 40, // กำหนดความสูง
+                                    decoration: const BoxDecoration(
+                                      color: primary, // สีพื้นหลังของปุ่ม
+                                      shape: BoxShape
+                                          .circle, // รูปร่างของปุ่ม (วงกลม)
+                                    ),
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white, // สีไอคอน
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 25),
-                                customButtom(
-                                    labelText: 'แก้ไข', onPressd: () {})
+                                SizedBox(
+                                  child: Row(
+                                    children: [
+                                      customButtom(
+                                        labelText: 'แก้ไข',
+                                        onPressd: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            AppRouter.updateOrder,
+                                            arguments: {
+                                              "order": items,
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -136,8 +178,11 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
               }
             } else if (state.oderMeStatus == OrderMeStatus.failed) {
               // กรณีเกิดข้อผิดพลาดในการโหลดข้อมูล
-              return const Center(
-                child: Text('Failed to load orders.'),
+              return Center(
+                child: Image.asset(
+                  "assets/images/notfound.png",
+                  height: 200,
+                ),
               );
             } else {
               // กรณีกำลังโหลดข้อมูล
@@ -148,12 +193,40 @@ class _ProductMyScreenState extends State<ProductMyScreen> {
           },
         ),
       ),
-      // body: Center(
-      //   child: Image.asset(
-      //     "assets/images/notfound.png",
-      //     height: 200,
-      //   ),
-      // ),
+    );
+  }
+
+  void showDeleteConfirmationDialog(BuildContext context, String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ยืนยันการลบ'),
+          content: const Text('คุณแน่ใจหรือว่าต้องการลบรายการนี้หรือไม่?'),
+          actions: [
+            // ปุ่มยกเลิก
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด Dialog
+              },
+              child: const Text('ยกเลิก'),
+            ),
+            // ปุ่มยืนยัน
+            TextButton(
+              onPressed: () async {
+                final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+                // final Dio dio = DioConfig.dioWithAuth;
+                // final result = await dio.delete('order/$id');
+                // logger.i(result);
+                final OrderMeBloc orderBloc = context.read<OrderMeBloc>();
+                orderBloc.add(OrderMeDeleteEvent(id, authBloc.state.me!.sub));
+                Navigator.of(context).pop();
+              },
+              child: const Text('ยืนยัน'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -34,15 +34,9 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: BlocBuilder<CartCountBloc, CartCountState>(
-          builder: (context, state) {
-            return Text(
-              state.quantity.length.toString(),
-              style: const TextStyle(
-                color: Colors.white70,
-              ),
-            );
-          },
+        title: const Text(
+          "สินค้า",
+          style: TextStyle(color: Colors.white70),
         ),
         backgroundColor: primary,
         actions: [
@@ -63,7 +57,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                     BlocBuilder<CartCountBloc, CartCountState>(
                       builder: (context, state) {
-                        return state.productCount != 0
+                        return state.quantity.isNotEmpty
                             ? Positioned(
                                 top: 0,
                                 right: 0,
@@ -72,7 +66,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   backgroundColor:
                                       Colors.red, // สีพื้นหลังของเลข
                                   child: Text(
-                                    state.productCount.toString(),
+                                    state.quantity.length.toString(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -198,14 +192,20 @@ class _OrderScreenState extends State<OrderScreen> {
                 );
               } else {
                 // กรณีไม่มีข้อมูล order
-                return const Center(
-                  child: Text('No orders available.'),
+                return Center(
+                  child: Image.asset(
+                    "assets/images/notfound.png",
+                    height: 200,
+                  ),
                 );
               }
             } else if (state.orderStatus == OrderStatus.failed) {
               // กรณีเกิดข้อผิดพลาดในการโหลดข้อมูล
-              return const Center(
-                child: Text('Failed to load orders.'),
+              return Center(
+                child: Image.asset(
+                  "assets/images/notfound.png",
+                  height: 200,
+                ),
               );
             } else {
               // กรณีกำลังโหลดข้อมูล

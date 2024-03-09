@@ -1,39 +1,38 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
-import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/components/product_image.dart';
 import 'package:flutter_assigment10v1/components/share/custom_textfield.dart';
-import 'package:flutter_assigment10v1/models/order_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_assigment10v1/utils/logger.dart';
 
-class AddOrderScreen extends StatefulWidget {
-  const AddOrderScreen({super.key});
+class UpdateOrderScreen extends StatefulWidget {
+  UpdateOrderScreen({super.key});
 
   @override
-  State<AddOrderScreen> createState() => _AddOrderScreenState();
+  State<UpdateOrderScreen> createState() => _UpdateOrderScreenState();
 }
 
-final formKeyAddOrder = GlobalKey<FormState>();
-
-final beerNameController = TextEditingController();
-
-final priceController = TextEditingController();
-
-final alcoholController = TextEditingController();
-
-final stockController = TextEditingController();
-
-final descriptionController = TextEditingController();
-
-String? image;
-
-File? _imageFile;
-
-class _AddOrderScreenState extends State<AddOrderScreen> {
+class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    logger.f(arguments);
+    final formKeyAddOrder = GlobalKey<FormState>();
+
+    final beerNameController = TextEditingController();
+
+    final priceController = TextEditingController();
+
+    final alcoholController = TextEditingController();
+
+    final stockController = TextEditingController();
+
+    final descriptionController = TextEditingController();
+
+    String? image;
+
+    File? _imageFile;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('เพิ่มสินค้า'),
@@ -122,34 +121,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     );
   }
 
-  // ฟังก์ชันสำหรับเลือกรูปภาพ
-  void _callBackSetImage(File? imageFile) {
-    setState(() {
-      _imageFile = imageFile;
-    });
-  }
+  void handleSubmit() {}
 
-  handleSubmit() {
-    if (formKeyAddOrder.currentState!.validate()) {
-      formKeyAddOrder.currentState!.save();
-      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-      final OrderMeBloc orderBloc = context.read<OrderMeBloc>();
-
-      final value = Order(
-        beerName: beerNameController.text,
-        description: descriptionController.text,
-        price: int.parse(priceController.text),
-        stock: int.parse(stockController.text),
-        alcohol: "${alcoholController.text} %",
-        shopName: authBloc.state.me!.shopName,
-        userId: authBloc.state.me!.sub,
-      );
-      beerNameController.clear();
-      descriptionController.clear();
-      priceController.clear();
-      stockController.clear();
-      alcoholController.clear();
-      orderBloc.add(AddOrderMeEvent(value, _imageFile));
-    }
-  }
+  _callBackSetImage(File? file) {}
 }

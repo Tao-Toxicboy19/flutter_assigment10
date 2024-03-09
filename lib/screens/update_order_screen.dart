@@ -8,35 +8,59 @@ import 'package:flutter_assigment10v1/components/share/custom_textfield.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddOrderScreen extends StatefulWidget {
-  const AddOrderScreen({super.key});
+class UpdateOrderScreen extends StatefulWidget {
+  const UpdateOrderScreen({super.key});
 
   @override
-  State<AddOrderScreen> createState() => _AddOrderScreenState();
+  State<UpdateOrderScreen> createState() => _UpdateOrderScreenState();
 }
 
-final formKeyAddOrder = GlobalKey<FormState>();
-
-final beerNameController = TextEditingController();
-
-final priceController = TextEditingController();
-
-final alcoholController = TextEditingController();
-
-final stockController = TextEditingController();
-
-final descriptionController = TextEditingController();
-
+final formKeyUpdateOrder = GlobalKey<FormState>();
 String? image;
 
 File? _imageFile;
 
-class _AddOrderScreenState extends State<AddOrderScreen> {
+class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    final Order order = arguments["order"] as Order;
+    final beerNameController = TextEditingController(text: order.beerName);
+    final priceController = TextEditingController(text: order.price.toString());
+    final alcoholController = TextEditingController(text: order.alcohol);
+    final stockController = TextEditingController(text: order.stock.toString());
+    final descriptionController =
+        TextEditingController(text: order.description);
+
+    handleSubmit() {
+      if (formKeyUpdateOrder.currentState!.validate()) {
+        formKeyUpdateOrder.currentState!.save();
+        final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+        final OrderMeBloc orderBloc = context.read<OrderMeBloc>();
+
+        final value = Order(
+          beerName: beerNameController.text,
+          description: descriptionController.text,
+          price: int.parse(priceController.text),
+          stock: int.parse(stockController.text),
+          alcohol: alcoholController.text,
+          shopName: authBloc.state.me!.shopName,
+          userId: authBloc.state.me!.sub,
+        );
+        orderBloc.add(OrderMeUpdateEvent(value, _imageFile, order.id!));
+      }
+    }
+
+    // ฟังก์ชันสำหรับเลือกรูปภาพ
+    void callBackSetImage(File? imageFile) {
+      setState(() {
+        _imageFile = imageFile;
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('เพิ่มสินค้า'),
+        title: const Text('แก้ไขสินค้า'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -53,7 +77,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
           child: Column(
             children: [
               Form(
-                key: formKeyAddOrder,
+                key: formKeyUpdateOrder,
                 child: Column(
                   children: [
                     const SizedBox(height: 10.0),
@@ -105,7 +129,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                           : null,
                     ),
                     ProductImage(
-                      _callBackSetImage,
+                      callBackSetImage,
                       image: image,
                     ),
                     // ElevatedButton(
@@ -120,36 +144,5 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
         ),
       ),
     );
-  }
-
-  // ฟังก์ชันสำหรับเลือกรูปภาพ
-  void _callBackSetImage(File? imageFile) {
-    setState(() {
-      _imageFile = imageFile;
-    });
-  }
-
-  handleSubmit() {
-    if (formKeyAddOrder.currentState!.validate()) {
-      formKeyAddOrder.currentState!.save();
-      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-      final OrderMeBloc orderBloc = context.read<OrderMeBloc>();
-
-      final value = Order(
-        beerName: beerNameController.text,
-        description: descriptionController.text,
-        price: int.parse(priceController.text),
-        stock: int.parse(stockController.text),
-        alcohol: "${alcoholController.text} %",
-        shopName: authBloc.state.me!.shopName,
-        userId: authBloc.state.me!.sub,
-      );
-      beerNameController.clear();
-      descriptionController.clear();
-      priceController.clear();
-      stockController.clear();
-      alcoholController.clear();
-      orderBloc.add(AddOrderMeEvent(value, _imageFile));
-    }
   }
 }

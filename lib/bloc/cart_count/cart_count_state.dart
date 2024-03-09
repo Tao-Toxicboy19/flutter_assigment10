@@ -4,7 +4,7 @@ enum CartCountStatus { loading, success, failed }
 
 class CartCountState extends Equatable {
   final int cartCount;
-  final int productCount;
+  final Map<String, int>? productCount;
   final List<String> quantity;
   final List<Order>? cartOrder;
   final String? errorMessage;
@@ -13,7 +13,7 @@ class CartCountState extends Equatable {
   const CartCountState({
     this.cartOrder,
     this.cartCount = 0,
-    this.productCount = 0,
+    this.productCount,
     this.quantity = const [], // เปลี่ยนเป็นรายการว่างเปล่า
     this.errorMessage,
     this.status = CartCountStatus.loading,
@@ -22,7 +22,7 @@ class CartCountState extends Equatable {
   CartCountState copyWith({
     List<Order>? cartOrder,
     int? cartCount,
-    int? productCount,
+    Map<String, int>? productCount,
     List<String>? quantity,
     String? errorMessage,
     CartCountStatus? status,
