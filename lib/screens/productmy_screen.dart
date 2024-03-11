@@ -1,17 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assigment10v1/app_routes.dart';
 import 'package:flutter_assigment10v1/bloc/auth/auth_bloc.dart';
 import 'package:flutter_assigment10v1/bloc/order_me/order_me_bloc.dart';
 import 'package:flutter_assigment10v1/components/share/custom_buttom.dart';
 import 'package:flutter_assigment10v1/models/order_model.dart';
-import 'package:flutter_assigment10v1/services/dio_config.dart';
 import 'package:flutter_assigment10v1/theme/colors.dart';
 import 'package:flutter_assigment10v1/utils/constants.dart';
-import 'package:flutter_assigment10v1/utils/logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductMyScreen extends StatefulWidget {

@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: go-hex
+      POSTGRES_PASSWORD: testpass123
+      POSTGRES_USER: postgres
+    ports:
+      - '3500:5432'
+    volumes:
+      - D:\golang\hexagonal-auth\db:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # เพิ่มสำหรับทดสอบการ run app บน network เดียวกัน
+  myapp:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=14E71AEF5B8B21715A5639FDACC27
+      - DB_HOST=192.168.199.1
+      - DB_PORT=3500
+      - DB_USER=postgres
+      - DB_PASSWORD=testpass123
+      - DB_NAME=go-hex
+    depends_on:
+      - postgres
+    restart: unless-stopped

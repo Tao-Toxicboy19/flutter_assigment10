@@ -18,7 +18,7 @@ class DioConfig {
         onRequest: (options, handler) async {
           options.headers['Accept'] = 'application/json';
           options.headers['Content-Type'] = 'application/json';
-          options.baseUrl = url;
+          options.baseUrl = apiUrl;
           return handler.next(options);
         },
         onResponse: (response, handler) async {
@@ -58,7 +58,7 @@ class DioConfig {
           options.headers['Authorization'] = 'Bearer $_token';
           options.headers['Accept'] = 'application/json';
           options.headers['Content-Type'] = 'application/json';
-          options.baseUrl = url;
+          options.baseUrl = apiUrl;
           return handler.next(options);
         },
         onResponse: (response, handler) async {

@@ -52,7 +52,6 @@ class OrderMeBloc extends Bloc<OrderMeEvent, OrderMeState> {
             if (navigatorState.currentContext != null) {
               Navigator.pop(navigatorState.currentContext!, true);
               // add(FetchOrdersEvent);
-              // ignore: use_build_context_synchronously
               navigatorState.currentContext!
                   .read<OrderBloc>()
                   .add(FetchOrdersEvent());
@@ -128,7 +127,6 @@ class OrderMeBloc extends Bloc<OrderMeEvent, OrderMeState> {
           if (result.statusCode == 201) {
             if (navigatorState.currentContext != null) {
               Navigator.pop(navigatorState.currentContext!, true);
-              // ignore: use_build_context_synchronously
               navigatorState.currentContext!
                   .read<OrderBloc>()
                   .add(FetchOrdersEvent());
